@@ -1,6 +1,7 @@
 // Copyright © 2018 650 Industries. All rights reserved.
 
 #import <EXSplashScreen/EXSplashScreenController.h>
+#import <EXSplashScreen/EXSplashScreenDismissableView.h>
 #import <UMCore/UMDefines.h>
 #import <UMCore/UMUtilities.h>
 
@@ -8,6 +9,7 @@
 
 @property (nonatomic, weak) UIViewController *viewController;
 @property (nonatomic, strong) UIView *splashScreenView;
+@property (nonatomic, weak) NSTimer *warningTimer;
 
 @property (nonatomic, assign) BOOL autoHideEnabled;
 @property (nonatomic, assign) BOOL splashScreenShown;
@@ -44,10 +46,26 @@
     self.splashScreenView.frame = rootView.bounds;
     [rootView addSubview:self.splashScreenView];
     self.splashScreenShown = YES;
+    
+    self.warningTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
+                                                         target:self
+                                                       selector:@selector(showWarningIfDismissableView)
+                                                       userInfo:nil
+                                                        repeats:NO];
+    
     if (successCallback) {
       successCallback();
     }
   }];
+}
+
+-(void)showWarningIfDismissableView
+{
+  if ([self.splashScreenView isKindOfClass: [EXSplashScreenDismissableView class]]) {
+    [(EXSplashScreenDismissableView *)self.splashScreenView showVisibilityWarningWithCallback: ^{
+      [self hideWithCallback: nil];
+    }];
+  }
 }
 
 - (void)preventAutoHideWithCallback:(void (^)(BOOL))successCallback failureCallback:(void (^)(NSString * _Nonnull))failureCallback
@@ -77,6 +95,7 @@
     [self.splashScreenView removeFromSuperview];
     self.splashScreenShown = NO;
     self.autoHideEnabled = YES;
+    [self.warningTimer invalidate];
     if (successCallback) {
       successCallback(YES);
     }
