@@ -2,13 +2,11 @@
 
 #import "EXSplashScreenDismissableView.h"
 
-typedef void(^MyCustomBlock)(void);
-
+typedef void(^HideSplashScreenBlock)(void);
 
 @interface EXSplashScreenDismissableView()
 
-
-@property (nonatomic, copy) MyCustomBlock customBlock;
+@property (nonatomic, copy) HideSplashScreenBlock hideSplashScreen;
 
 @end
 
@@ -16,6 +14,8 @@ typedef void(^MyCustomBlock)(void);
 
 -(void)showVisibilityWarningWithCallback:(void (^)(void))callback
 {
+  self.hideSplashScreen = callback;
+  
   UIView *warningView = [UIView new];
   CGRect warningViewFrame = CGRectMake(0, self.bounds.size.height - 400, self.bounds.size.width, 200);
   warningView.frame = warningViewFrame;
@@ -40,9 +40,6 @@ typedef void(^MyCustomBlock)(void);
   buttonHide.layer.borderWidth = 1.0f;
   buttonHide.layer.borderColor = [UIColor darkGrayColor].CGColor;
   buttonHide.layer.cornerRadius = 3.0f;
-
-  self.customBlock = callback;
-  
   [buttonHide addTarget:self action:@selector(handleDismissButtonPress)  forControlEvents:UIControlEventTouchUpInside];
   [warningView addSubview:buttonHide];
   [self addSubview: warningView];
@@ -50,7 +47,7 @@ typedef void(^MyCustomBlock)(void);
 
 -(void)handleDismissButtonPress
 {
-  self.customBlock();
+  self.hideSplashScreen();
 }
 
 @end
