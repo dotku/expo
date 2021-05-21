@@ -47,7 +47,7 @@
     [rootView addSubview:self.splashScreenView];
     self.splashScreenShown = YES;
     
-    self.warningTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
+    self.warningTimer = [NSTimer scheduledTimerWithTimeInterval:20.0
                                                          target:self
                                                        selector:@selector(showWarningIfDismissableView)
                                                        userInfo:nil
