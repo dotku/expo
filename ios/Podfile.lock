@@ -1891,6 +1891,7 @@ PODS:
   - EXSpeech (9.1.0):
     - UMCore
   - EXSplashScreen (0.10.2):
+    - MBProgressHUD (~> 1.2.0)
     - React-Core
     - UMCore
   - EXSQLite (9.1.0):
@@ -2066,6 +2067,7 @@ PODS:
   - lottie-react-native (3.4.0):
     - lottie-ios (~> 3.1.8)
     - React
+  - MBProgressHUD (1.2.0)
   - MLKitCommon (2.1.0):
     - GoogleDataTransport (~> 8.0)
     - GoogleToolboxForMac/Logger (~> 2.1)
@@ -2820,6 +2822,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - JKBigInteger2
     - lottie-ios
+    - MBProgressHUD
     - MLKitCommon
     - MLKitFaceDetection
     - MLKitVision
@@ -4003,7 +4006,7 @@ SPEC CHECKSUMS:
   EXSharing: f1e19ba73bb9274ebd177aae6046ef8cc68de627
   EXSMS: 59a6784d0fc6f24fe489e534e10c0bd063705bb0
   EXSpeech: 010826dbfa8287358a05bbd59b44d620266806e3
-  EXSplashScreen: 7bca6748b2ebf21b1fed6c91d4c4db689f95a9a6
+  EXSplashScreen: a7e0fd0d1b3bd4299e765da4b271a3d02441487c
   EXSQLite: d918f5fd3c21b7eb2cf79c9ae7feca89937989b3
   EXStoreReview: b1f68ed0369b0f1c443214ac8d6881ef3b64de9a
   EXStructuredHeaders: 7e7eec19a326bc58cca2fb3edbac0afaecb89c16
@@ -4040,6 +4043,7 @@ SPEC CHECKSUMS:
   JKBigInteger2: e91672035c42328c48b7dd015b66812ddf40ca9b
   lottie-ios: 3a3758ef5a008e762faec9c9d50a39842f26d124
   lottie-react-native: 55abec29d1a068cd43fdd2e7353e409fdaee8389
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   MLKitCommon: 9ed187a042139d51c0d8bf6a8301bb20b375c576
   MLKitFaceDetection: 5b92261dd6e4205e3dab0df62537ac3f4e90e5db
   MLKitVision: 51385878c9100024478971856510f9271ff555b5

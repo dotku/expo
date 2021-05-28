@@ -3,6 +3,8 @@
 #import <EXSplashScreen/EXSplashScreenController.h>
 #import <UMCore/UMDefines.h>
 #import <UMCore/UMUtilities.h>
+#import "MBProgressHUD.h"
+#import "EXSplashScreenHUDButton.h"
 
 @interface EXSplashScreenController ()
 
@@ -11,6 +13,7 @@
 
 @property (nonatomic, weak) NSTimer *warningTimer;
 @property (nonatomic, strong) UIButton *warningButton;
+@property (nonatomic, weak) MBProgressHUD *warningHud;
 
 @property (nonatomic, assign) BOOL autoHideEnabled;
 @property (nonatomic, assign) BOOL splashScreenShown;
@@ -48,12 +51,11 @@
     self.splashScreenView.frame = rootView.bounds;
     [rootView addSubview:self.splashScreenView];
     self.splashScreenShown = YES;
-    self.warningTimer = [NSTimer scheduledTimerWithTimeInterval:20.0
+    self.warningTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
                                                          target:self
                                                        selector:@selector(showSplashScreenVisibleWarning)
                                                        userInfo:nil
                                                         repeats:NO];
-    
     if (successCallback) {
       successCallback();
     }
@@ -62,45 +64,38 @@
 
 -(void)showSplashScreenVisibleWarning
 {
-  
 #if DEBUG
-  int warningViewHeight = 100;
-  float paddingHorizontal = 32.0f;
-  float marginVertical = 16.0f;
+  _warningHud = [MBProgressHUD showHUDAddedTo: self.splashScreenView animated:YES];
+  _warningHud.mode = MBProgressHUDModeCustomView;
   
-  UIEdgeInsets safeAreaInsets = [self.splashScreenView safeAreaInsets];
+  NSString *message = @"Still see the splash screen?";
+  EXSplashScreenHUDButton *button = [EXSplashScreenHUDButton buttonWithType: UIButtonTypeSystem];
   
-  CGRect warningViewFrame = CGRectMake(self.splashScreenView.bounds.origin.x + paddingHorizontal, self.splashScreenView.bounds.size.height - safeAreaInsets.bottom - warningViewHeight - marginVertical, self.splashScreenView.bounds.size.width - paddingHorizontal * 2, warningViewHeight);
+  if (@available(iOS 13.0, *)) {
+    UIImageView *infoIcon = [UIImageView new];
+    UIImage *infoImage = [UIImage systemImageNamed: @"info.circle" withConfiguration: [UIImageSymbolConfiguration configurationWithFont: [UIFont boldSystemFontOfSize: 24.f]]];
+    [infoIcon setImage: infoImage];
+    infoIcon.frame = CGRectMake(12.f, 0, 24.f, 24.f);
+    [button addSubview: infoIcon];
+  }
+  
+  [button setTitle: message forState:UIControlStateNormal];
+  button.titleLabel.font = [UIFont boldSystemFontOfSize: 16.0f];
+  button.titleEdgeInsets = UIEdgeInsetsMake(0, 24.0f, 0, 0);
+  [button addTarget:self action:@selector(hideWarningView) forControlEvents:UIControlEventTouchUpInside];
 
-  [_warningButton addTarget:self action:@selector(hideWarningView) forControlEvents:UIControlEventTouchUpInside];
+  _warningHud.customView = button;
+  _warningHud.offset = CGPointMake(0.f, MBProgressMaxOffset);
   
-  _warningButton.frame = warningViewFrame;
-  _warningButton.backgroundColor = [UIColor whiteColor];
-  _warningButton.layer.cornerRadius = 4.0f;
-  _warningButton.layer.shadowRadius  = 1.5f;
-  _warningButton.layer.shadowColor   = [[UIColor lightGrayColor] CGColor];
-  _warningButton.layer.shadowOpacity = 0.6f;
-  _warningButton.layer.shadowOffset = CGSizeMake(0, 1.5f);
-  _warningButton.layer.masksToBounds = NO;
-  
-  int warningLabelHeight = 80;
-  UILabel *warningLabel = [[UILabel alloc] init];
-  warningLabel.frame = CGRectMake(warningViewFrame.origin.x, warningViewFrame.origin.y, warningViewFrame.size.width - 32.0f, warningLabelHeight);
-  warningLabel.center = CGPointMake(warningViewFrame.size.width / 2, warningViewFrame.size.height / 2);
-  warningLabel.text = @"Looks like the splash screen has been visible for over 20 seconds - did you forget to hide it?";
-  warningLabel.numberOfLines = 0;
-  warningLabel.font = [UIFont systemFontOfSize:16.0f];
-  warningLabel.textColor = [UIColor darkGrayColor];
-  warningLabel.textAlignment = NSTextAlignmentCenter;
-  [_warningButton addSubview: warningLabel];
-  
-  [self.splashScreenView addSubview: _warningButton];
+  [_warningHud hideAnimated:YES afterDelay:8.f];
 #endif
 }
 
 -(void)hideWarningView {
-  _warningButton.hidden = true;
-  [_warningButton removeFromSuperview];
+  NSURL *fyiURL = [[NSURL alloc] initWithString:@"https://github.com/expo/fyi/blob/master/splash-screen-hanging"];
+
+  [[UIApplication sharedApplication] openURL:fyiURL];
+  [_warningHud hideAnimated: YES];
 }
 
 - (void)preventAutoHideWithCallback:(void (^)(BOOL))successCallback failureCallback:(void (^)(NSString * _Nonnull))failureCallback
