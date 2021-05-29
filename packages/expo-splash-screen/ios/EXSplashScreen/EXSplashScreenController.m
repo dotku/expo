@@ -5,10 +5,12 @@
 #import <UMCore/UMUtilities.h>
 #import "MBProgressHUD.h"
 #import "EXSplashScreenHUDButton.h"
+#import "EXSplashScreenViewContainer.h"
 
 @interface EXSplashScreenController ()
 
 @property (nonatomic, weak) UIViewController *viewController;
+@property (nonatomic, strong) EXSplashScreenViewContainer *viewContainer;
 @property (nonatomic, strong) UIView *splashScreenView;
 
 @property (nonatomic, weak) NSTimer *warningTimer;
@@ -30,7 +32,8 @@
     _autoHideEnabled = YES;
     _splashScreenShown = NO;
     _appContentAppeared = NO;
-    _splashScreenView = [splashScreenViewProvider createSplashScreenView];
+    _viewContainer = [splashScreenViewProvider createSplashScreenView];
+    _splashScreenView = _viewContainer.view;
   }
   return self;
 }
@@ -49,11 +52,15 @@
     self.splashScreenView.frame = rootView.bounds;
     [rootView addSubview:self.splashScreenView];
     self.splashScreenShown = YES;
-    self.warningTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
-                                                         target:self
-                                                       selector:@selector(showSplashScreenVisibleWarning)
-                                                       userInfo:nil
-                                                        repeats:NO];
+    
+    if (self.viewContainer.context != EXSplashScreenHome) {
+      self.warningTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
+                                                           target:self
+                                                         selector:@selector(showSplashScreenVisibleWarning)
+                                                         userInfo:nil
+                                                          repeats:NO];
+    }
+    
     if (successCallback) {
       successCallback();
     }
