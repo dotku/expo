@@ -7,6 +7,8 @@ import android.view.animation.AlphaAnimation
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import expo.modules.splashscreen.SplashScreenView
+import expo.modules.splashscreen.SplashScreenViewContainer
+import expo.modules.splashscreen.SplashScreenViewContext
 import expo.modules.splashscreen.SplashScreenViewProvider
 import expo.modules.updates.manifest.raw.RawManifest
 import host.exp.exponent.analytics.EXL
@@ -24,10 +26,15 @@ class ManagedAppSplashScreenViewProvider(
     private const val TAG: String = "ExperienceSplashScreenManifestBasedResourceProvider"
   }
 
-  override fun createSplashScreenView(context: Context): View {
+  override fun createSplashScreenView(context: Context): SplashScreenViewContainer {
     splashScreenView = SplashScreenView(context)
     configureSplashScreenView(context, config, null)
-    return splashScreenView
+
+    var viewContainer = SplashScreenViewContainer()
+    viewContainer.view = splashScreenView
+    viewContainer.context = SplashScreenViewContext.MANAGED
+
+    return viewContainer
   }
 
   fun updateSplashScreenViewWithManifest(context: Context, manifest: RawManifest) {
