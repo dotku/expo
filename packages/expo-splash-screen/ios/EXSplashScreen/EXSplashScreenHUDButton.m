@@ -2,22 +2,33 @@
 //  EXSplashScreenHUDButton.m
 //  EXSplashScreen
 //
-//  Created by andrew on 2021-05-27.
-//
 
 #import "EXSplashScreenHUDButton.h"
 
 @implementation EXSplashScreenHUDButton
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+-(void)layoutSubviews
+{
+  if (@available(iOS 13.0, *)) {
+    UIImageView *infoIcon = [UIImageView new];
+    UIImageSymbolConfiguration *symbolConfig = [UIImageSymbolConfiguration configurationWithFont: [UIFont boldSystemFontOfSize: 24.f]];
+    UIImage *infoImage = [UIImage systemImageNamed: @"info.circle" withConfiguration: symbolConfig];
+    [infoIcon setImage: infoImage];
+    infoIcon.frame = CGRectMake(24.f, 0, 24.f, 24.f);
+    [self addSubview: infoIcon];
+    
+  }
+  
+  NSString *title = @"Still see the splash screen?";
+  [self setTitle: title forState:UIControlStateNormal];
+  self.titleLabel.font = [UIFont boldSystemFontOfSize: 16.0f];
+  self.titleEdgeInsets = UIEdgeInsetsMake(0, 24.0f, 0, 0);
+  
+  [super layoutSubviews];
 }
-*/
 
 -(CGSize)intrinsicContentSize {
-  return CGSizeMake(300, 24);
+  return CGSizeMake(300, 24.f);
 }
+
 @end

@@ -12,7 +12,6 @@
 @property (nonatomic, strong) UIView *splashScreenView;
 
 @property (nonatomic, weak) NSTimer *warningTimer;
-@property (nonatomic, strong) UIButton *warningButton;
 @property (nonatomic, weak) MBProgressHUD *warningHud;
 
 @property (nonatomic, assign) BOOL autoHideEnabled;
@@ -32,7 +31,6 @@
     _splashScreenShown = NO;
     _appContentAppeared = NO;
     _splashScreenView = [splashScreenViewProvider createSplashScreenView];
-    _warningButton = [UIButton new];
   }
   return self;
 }
@@ -68,20 +66,8 @@
   _warningHud = [MBProgressHUD showHUDAddedTo: self.splashScreenView animated:YES];
   _warningHud.mode = MBProgressHUDModeCustomView;
   
-  NSString *message = @"Still see the splash screen?";
   EXSplashScreenHUDButton *button = [EXSplashScreenHUDButton buttonWithType: UIButtonTypeSystem];
   
-  if (@available(iOS 13.0, *)) {
-    UIImageView *infoIcon = [UIImageView new];
-    UIImage *infoImage = [UIImage systemImageNamed: @"info.circle" withConfiguration: [UIImageSymbolConfiguration configurationWithFont: [UIFont boldSystemFontOfSize: 24.f]]];
-    [infoIcon setImage: infoImage];
-    infoIcon.frame = CGRectMake(12.f, 0, 24.f, 24.f);
-    [button addSubview: infoIcon];
-  }
-  
-  [button setTitle: message forState:UIControlStateNormal];
-  button.titleLabel.font = [UIFont boldSystemFontOfSize: 16.0f];
-  button.titleEdgeInsets = UIEdgeInsetsMake(0, 24.0f, 0, 0);
   [button addTarget:self action:@selector(hideWarningView) forControlEvents:UIControlEventTouchUpInside];
 
   _warningHud.customView = button;

@@ -400,7 +400,6 @@ NS_ASSUME_NONNULL_BEGIN
   UM_WEAKIFY(self);
   dispatch_async(dispatch_get_main_queue(), ^{
     UM_ENSURE_STRONGIFY(self);
-    NSLog(@"BOOM!");
     [splashScreenService showSplashScreenFor:self
                     splashScreenViewProvider:provider
                              successCallback:hideRootViewControllerSplashScreen
